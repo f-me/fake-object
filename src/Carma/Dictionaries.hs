@@ -10,13 +10,11 @@ import Fake.Dictionary
 data CarMake
 deriving instance Typeable CarMake
 instance Dictionary CarMake
-instance Model CarMake where modelFields = dictFields
 
 data CarModel
 deriving instance Typeable CarModel
 instance Dictionary CarModel
 instance NestedDictionary CarModel where type Parent CarModel = CarMake
-instance Model CarModel where modelFields = dictFields ++ nestedDictFields
 
 
 data ObjBase = ObjBase
@@ -26,7 +24,6 @@ data ObjBase = ObjBase
   }
   deriving Typeable
 
-instance Model ObjBase where modelFields = getFields ObjBase
 
 data Case = Case
   {obj      :: Field "obj"      (Object ObjBase)         ""
@@ -34,5 +31,3 @@ data Case = Case
   ,carModel :: Field "carModel" (Maybe (Ident CarModel)) "Модель автомобиля"
   }
   deriving Typeable
-
-instance Model Case where modelFields = getFields Case

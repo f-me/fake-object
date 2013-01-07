@@ -2,16 +2,12 @@
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE KindSignatures #-}
 {-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE ExistentialQuantification #-}
 
 module Fake.Object.Internals
   (Object(..)
   ,Field(..)
   ,fld
   ,Ident(..)
-  ,SomeField(..)
-  ,Model(..)
-  ,getFields
   ) where
 
 import Data.Text (Text)
@@ -73,22 +69,3 @@ fld (_ :: cls -> Field name typ desc)
 -- FIXME: Later we can change `Text` to `Word64`
 newtype Ident cls = Ident {identValue :: Text}
   deriving (Show, Ord, Eq, Typeable)
-
-
-data SomeField cls
-  = forall name typ desc . (SingI name, Typeable typ, SingI desc)
-  => SomeField (cls -> Field name typ desc)
-
-
-class Model cls where
-  modelFields :: [SomeField cls]
-
-class    EnumFields cls f   where getFields :: f -> [SomeField cls]
-instance EnumFields cls cls where getFields _ = []
-instance (SingI name, Typeable typ, SingI desc, EnumFields cls res)
-  => EnumFields cls (Field name typ desc -> res)
-  where
-    getFields f
-      = SomeField (const Field :: cls -> Field name typ desc)
-      : getFields (f Field)
-
