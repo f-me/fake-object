@@ -27,7 +27,7 @@ import Control.Lens
 newtype Object cls = Object {untyped :: Map Text Dynamic}
   -- `Object` is `Typeable` instance so we can use it as a value of a field in
   -- another object
-  deriving (Typeable, Show)
+  deriving Typeable
 
 
 -- These are internal functions to get/set object fields.

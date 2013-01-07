@@ -18,15 +18,17 @@ library
   exposed-modules:   Fake.Object,
                      Fake.Dictionary,
                      Fake.Object.Internals,
+                     Fake.Object.Aeson,
                      Carma.Dictionaries
   -- other-modules:
   build-depends:     base,
                      containers == 0.5.0.0,
-                     lens,
+                     unordered-containers,
+                     lens, aeson,
                      text
 
   extensions:
     DataKinds, EmptyDataDecls,
     TypeFamilies,
-    DeriveDataTypeable, StandaloneDeriving,
+    DeriveDataTypeable, GeneralizedNewtypeDeriving, StandaloneDeriving,
     MultiParamTypeClasses, FlexibleInstances, FlexibleContexts
