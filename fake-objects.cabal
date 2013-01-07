@@ -1,0 +1,30 @@
+
+name:                fake-objects
+version:             0.1.0.0
+synopsis:            Object model definition
+-- description:
+homepage:            https://github.com/f-me/carma-models
+license:             MIT
+license-file:        LICENSE
+author:              max taldykin
+maintainer:          max@formalmethods.ru
+-- copyright:
+category:            Data
+build-type:          Simple
+cabal-version:       >=1.8
+
+library
+  hs-source-dirs:    src
+  exposed-modules:   Fake.Object,
+                     Fake.Object.Internals,
+                     Carma.Dictionaries
+  -- other-modules:
+  build-depends:     base,
+                     containers == 0.5.0.0,
+                     lens,
+                     text
+
+  extensions:
+    DataKinds, EmptyDataDecls,
+    DeriveDataTypeable,
+    MultiParamTypeClasses, FlexibleInstances
