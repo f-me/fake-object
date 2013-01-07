@@ -26,7 +26,7 @@ data ObjBase = ObjBase
   }
   deriving Typeable
 
-instance Model ObjBase where modelFields = getModelFields ObjBase
+instance Model ObjBase where modelFields = getFields ObjBase
 
 data Case = Case
   {obj      :: Field "obj"      (Object ObjBase)         ""
@@ -35,4 +35,4 @@ data Case = Case
   }
   deriving Typeable
 
-instance Model Case where modelFields = getModelFields Case
+instance Model Case where modelFields = getFields Case

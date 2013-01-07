@@ -11,7 +11,7 @@ module Fake.Object.Internals
   ,Ident(..)
   ,SomeField(..)
   ,Model(..)
-  ,getModelFields
+  ,getFields
   ) where
 
 import Data.Text (Text)
@@ -83,12 +83,12 @@ data SomeField cls
 class Model cls where
   modelFields :: [SomeField cls]
 
-class    EnumFields cls f   where getModelFields :: f -> [SomeField cls]
-instance EnumFields cls cls where getModelFields _ = []
+class    EnumFields cls f   where getFields :: f -> [SomeField cls]
+instance EnumFields cls cls where getFields _ = []
 instance (SingI name, Typeable typ, SingI desc, EnumFields cls res)
   => EnumFields cls (Field name typ desc -> res)
   where
-    getModelFields f
+    getFields f
       = SomeField (const Field :: cls -> Field name typ desc)
-      : getModelFields (f Field)
+      : getFields (f Field)
 

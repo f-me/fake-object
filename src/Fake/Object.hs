@@ -7,7 +7,7 @@ module Fake.Object
   ,fld
   ,Ident
   ,Model(..)
-  ,getModelFields
+  ,getFields
   ) where
 
 import Data.Map (Map)
