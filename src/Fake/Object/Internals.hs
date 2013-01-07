@@ -60,22 +60,13 @@ objLens field = lens (`objGet` field) (`objSet` field)
 
 
 
-data Field cls (name :: Symbol) typ (desc :: Symbol) = Field
-
-instance (Typeable cls, SingI name, Typeable typ)
-  => Show (Field cls name typ desc)
-  where
-    show (_ :: Field cls name typ desc)
-      = fromSing (sing :: Sing name) ++ " :: "
-      ++ show (typeOf (undefined :: cls)) ++ " -> "
-      ++ show (typeOf (undefined :: typ))
-
+data Field (name :: Symbol) typ (desc :: Symbol) = Field
 
 -- TODO: class FieldLens
 fld
   :: (SingI name, Typeable typ)
-  => (cls -> Field cls name typ desc) -> SimpleLens (Object cls) typ
-fld (_ :: cls -> Field cls name typ desc)
+  => (cls -> Field name typ desc) -> SimpleLens (Object cls) typ
+fld (_ :: cls -> Field name typ desc)
   = objLens $ Text.pack $ fromSing (sing :: Sing name)
 
 
@@ -86,9 +77,7 @@ newtype Ident cls = Ident {identValue :: Text}
 
 data SomeField cls
   = forall name typ desc . (SingI name, Typeable typ, SingI desc)
-  => SomeField (Field cls name typ desc)
-
-deriving instance Typeable cls => Show (SomeField cls)
+  => SomeField (cls -> Field name typ desc)
 
 
 class Model cls where
@@ -97,9 +86,9 @@ class Model cls where
 class    EnumFields cls f   where getModelFields :: f -> [SomeField cls]
 instance EnumFields cls cls where getModelFields _ = []
 instance (SingI name, Typeable typ, SingI desc, EnumFields cls res)
-  => EnumFields cls (Field cls name typ desc -> res)
+  => EnumFields cls (Field name typ desc -> res)
   where
     getModelFields f
-      = SomeField (Field :: Field cls name typ desc)
+      = SomeField (const Field :: cls -> Field name typ desc)
       : getModelFields (f Field)
 

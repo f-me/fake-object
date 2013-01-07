@@ -20,18 +20,18 @@ instance Model CarModel where modelFields = dictFields ++ nestedDictFields
 
 
 data ObjBase = ObjBase
-  {ctime   :: Field ObjBase "ctime" String "Дата создания объекта"
-  ,mtime   :: Field ObjBase "mtime" String "Дата последнего изменения объекта"
-  ,deleted :: Field ObjBase "deleted" Bool "Флажок архивности"
+  {ctime   :: Field "ctime" String "Дата создания объекта"
+  ,mtime   :: Field "mtime" String "Дата последнего изменения объекта"
+  ,deleted :: Field "deleted" Bool "Флажок архивности"
   }
   deriving Typeable
 
 instance Model ObjBase where modelFields = getModelFields ObjBase
 
 data Case = Case
-  {obj      :: Field Case "obj"      (Object ObjBase)         ""
-  ,carMake  :: Field Case "carMake"  (Maybe (Ident CarMake))  "Марка автомобиля"
-  ,carModel :: Field Case "carModel" (Maybe (Ident CarModel)) "Модель автомобиля"
+  {obj      :: Field "obj"      (Object ObjBase)         ""
+  ,carMake  :: Field "carMake"  (Maybe (Ident CarMake))  "Марка автомобиля"
+  ,carModel :: Field "carModel" (Maybe (Ident CarModel)) "Модель автомобиля"
   }
   deriving Typeable
 
