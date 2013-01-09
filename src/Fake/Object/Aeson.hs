@@ -1,6 +1,10 @@
 
 {-# LANGUAGE ScopedTypeVariables #-}
-module Fake.Object.Aeson where
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+
+module Fake.Object.Aeson
+  (mkFromJSON
+  ) where
 
 import Control.Applicative
 import Data.Text (Text)
@@ -22,7 +26,6 @@ import Fake.Object.Internals as Fake
 deriving instance FromJSON (Ident cls)
 
 
-
 type FakeO = Map Text Dynamic
 
 
@@ -37,24 +40,36 @@ mkFromJSON f = \v -> case v of
 class IterateFromJSON cls f where
   iterateFromJSON :: f -> Aeson.Object -> FakeO -> Parser (Fake.Object cls)
 
-
 instance IterateFromJSON cls cls where
   iterateFromJSON _ o res
     | H.null o = pure $ Fake.Object res
     | otherwise = fail $ "iterateFromJSON: unexpected fields " ++ show o
 
+instance (IterateFromJSON cls res, Typeable cls, SingI name)
+  => IterateFromJSON cls (ObjId name -> res)
+  where
+    iterateFromJSON = iterateFromJSON'
+      (undefined :: Ident cls)
+      (Text.pack $ fromSing (sing :: Sing name))
 
 instance (IterateFromJSON cls res, SingI name, Typeable typ, FromJSON typ)
   => IterateFromJSON cls (Field name typ desc -> res)
   where
-    iterateFromJSON f o res = case H.lookup fieldName o of
-      Nothing  -> fail $ "iterateFromJSON: missing field " ++ show fieldName
-      Just val -> parseJSON val
-        >>= \(v :: typ) -> iterateFromJSON
-          (f Field)
-          (H.delete fieldName o)
-          (Map.insert fieldName (toDyn v) res)
-      where
-        fieldName = Text.pack $ fromSing (sing :: Sing name)
+    iterateFromJSON = iterateFromJSON'
+      (undefined :: typ)
+      (Text.pack $ fromSing (sing :: Sing name))
 
 
+iterateFromJSON'
+  :: (FromJSON typ, Typeable typ
+     ,IterateFromJSON cls (f -> res), IterateFromJSON cls res)
+  => typ -> Text -> (f -> res) -> Aeson.Object -> FakeO
+  -> Parser (Fake.Object cls)
+iterateFromJSON' (_ :: typ) fieldName f o res
+  = case H.lookup fieldName o of
+    Nothing  -> fail $ "iterateFromJSON: missing field " ++ show fieldName
+    Just val -> parseJSON val
+      >>= \(v :: typ) -> iterateFromJSON
+        (f undefined)
+        (H.delete fieldName o)
+        (Map.insert fieldName (toDyn v) res)

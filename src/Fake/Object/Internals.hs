@@ -6,6 +6,7 @@
 module Fake.Object.Internals
   (Object(..)
   ,Field(..)
+  ,ObjId(..)
   ,fld
   ,Ident(..)
   ) where
@@ -14,6 +15,7 @@ import Data.Text (Text)
 import qualified Data.Text as Text
 import Data.Map (Map)
 import qualified Data.Map as Map
+import Data.Word
 import Data.Dynamic
 import GHC.TypeLits
 import Control.Lens
@@ -56,16 +58,23 @@ objLens field = lens (`objGet` field) (`objSet` field)
 
 
 
+data ObjId (name :: Symbol) = ObjId
 data Field (name :: Symbol) typ (desc :: Symbol) = Field
 
--- TODO: class FieldLens
-fld
-  :: (SingI name, Typeable typ)
-  => (cls -> Field name typ desc) -> SimpleLens (Object cls) typ
-fld (_ :: cls -> Field name typ desc)
-  = objLens $ Text.pack $ fromSing (sing :: Sing name)
+class Typeable (Res cls f) => FieldLens cls f where
+  type Res cls f
+  fld :: (cls -> f) -> SimpleLens (Object cls) (Res cls f)
+
+instance (Typeable cls, SingI name) => FieldLens cls (ObjId name) where
+  type  Res cls (ObjId name) = Ident cls
+  fld _ = objLens $ Text.pack $ fromSing (sing :: Sing name)
+
+instance (Typeable typ, SingI name)
+  => FieldLens cls (Field name typ desc)
+  where
+    type Res cls (Field name typ desc) = typ
+    fld _ = objLens $ Text.pack $ fromSing (sing :: Sing name)
 
 
--- FIXME: Later we can change `Text` to `Word64`
-newtype Ident cls = Ident {identValue :: Text}
+newtype Ident cls = Ident {identValue :: Word64}
   deriving (Show, Ord, Eq, Typeable)

@@ -3,11 +3,12 @@
 module Carma.Dictionaries where
 
 import Data.Typeable
+import Data.Aeson hiding (Object)
+
 import Fake.Object
 import Fake.Object.Aeson
 import Fake.Dictionary
 
-import Data.Aeson hiding (Object)
 
 data CarMake
 deriving instance Typeable CarMake
@@ -28,8 +29,11 @@ data ObjBase = ObjBase
 
 instance FromJSON (Object ObjBase) where parseJSON = mkFromJSON ObjBase
 
+-- instance SqlFieldSet ObjBase where fields = getSqlFields ObjeBase
+
 data Case = Case
-  {obj      :: Field "obj"      (Object ObjBase)         ""
+  {ident    :: ObjId "ident"
+  ,obj      :: Field "obj"      (Object ObjBase)         ""
   ,carMake  :: Field "carMake"  (Maybe (Ident CarMake))  "Марка автомобиля"
   ,carModel :: Field "carModel" (Maybe (Ident CarModel)) "Модель автомобиля"
   }
@@ -37,3 +41,4 @@ data Case = Case
 
 
 instance FromJSON (Object Case) where parseJSON = mkFromJSON Case
+

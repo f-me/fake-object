@@ -19,6 +19,7 @@ library
                      Fake.Dictionary,
                      Fake.Object.Internals,
                      Fake.Object.Aeson,
+                     Fake.Object.DDL,
                      Carma.Dictionaries
   -- other-modules:
   build-depends:     base,
@@ -30,5 +31,5 @@ library
   extensions:
     DataKinds, EmptyDataDecls,
     TypeFamilies,
-    DeriveDataTypeable, GeneralizedNewtypeDeriving, StandaloneDeriving,
+    DeriveDataTypeable, StandaloneDeriving,
     MultiParamTypeClasses, FlexibleInstances, FlexibleContexts

@@ -8,8 +8,8 @@ import Fake.Object
 
 
 class Typeable d => Dictionary d where
-  dictKey :: d -> Field "ident" (Ident d) "key"
-  dictKey _ = Field
+  dictKey :: d -> ObjId "ident"
+  dictKey _ = ObjId
   dictVal :: d -> Field "value" Text "value"
   dictVal _ = Field
 
