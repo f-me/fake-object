@@ -7,6 +7,7 @@ import Data.Aeson hiding (Object)
 
 import Fake.Object
 import Fake.Object.Aeson
+import Fake.Object.DDL
 import Fake.Dictionary
 
 
@@ -28,8 +29,7 @@ data ObjBase = ObjBase
   deriving Typeable
 
 instance FromJSON (Object ObjBase) where parseJSON = mkFromJSON ObjBase
-
--- instance SqlFieldSet ObjBase where fields = getSqlFields ObjeBase
+instance SqlFields ObjBase where sqlFields = getSqlFields ObjBase
 
 data Case = Case
   {ident    :: ObjId "ident"
@@ -41,4 +41,7 @@ data Case = Case
 
 
 instance FromJSON (Object Case) where parseJSON = mkFromJSON Case
+instance SqlFields Case where sqlFields = getSqlFields Case
+
+ddl = mkDDL (undefined :: Case)
 
