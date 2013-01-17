@@ -1,8 +1,7 @@
 
-{-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE OverlappingInstances #-}
-module Fake.Object.Internals.Bag where
 
+module Fake.Object.Internals.Bag where
 
 import Data.Map (Map)
 import Data.Text (Text)
@@ -27,7 +26,7 @@ instance (SingI name, Typeable typ)
   => HasField (Bag ('(cls,name,typ) ': fs))  (cls -> Field name typ desc)
   where
     type FType (Bag ('(cls,name,typ) ': fs)) (cls -> Field name typ desc) = typ
-    fld _ = mapLens $ Text.pack $ fromSing (sing :: Sing name)
+    fld = mapLens . Text.pack . fieldName
 
 instance
   (SingI name, Typeable typ
@@ -36,4 +35,4 @@ instance
   => HasField (Bag ('(c,n,t) ': fs))  (cls -> Field name typ desc)
   where
     type FType (Bag ('(c,n,t) ': fs)) (cls -> Field name typ desc) = typ
-    fld _ = mapLens $ Text.pack $ fromSing (sing :: Sing name)
+    fld = mapLens . Text.pack . fieldName

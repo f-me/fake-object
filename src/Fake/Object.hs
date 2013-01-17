@@ -2,7 +2,8 @@
 module Fake.Object
   (toUntyped
   ,Field(..)
-  ,fld
+  ,fieldName
+  ,HasField(..) -- FIXME: export only `fld`?
   ,Object
   ,Ident
   ,Bag

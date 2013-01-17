@@ -1,6 +1,4 @@
 
-{-# LANGUAGE ScopedTypeVariables #-}
-
 module Fake.Object.Internals.Object where
 
 import Data.Text (Text)
@@ -35,4 +33,4 @@ instance (SingI name, Typeable typ)
   => HasField (Object cls) (cls -> Field name typ desc)
   where
     type FType (Object cls) (cls -> Field name typ desc) = typ
-    fld _ = mapLens $ Text.pack $ fromSing (sing :: Sing name)
+    fld = mapLens . Text.pack . fieldName

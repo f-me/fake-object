@@ -25,7 +25,8 @@ library
                      Fake.Object.Internals.Untyped,
                      Fake.Object.Internals.Field,
                      Fake.Object.Internals.Bag,
-                     Fake.Object.Internals.Object
+                     Fake.Object.Internals.Object,
+                     Fake.Object.Internals.Ident
 
   build-depends:     base,
                      containers == 0.5.0.0,
