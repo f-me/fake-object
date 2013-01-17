@@ -1,4 +1,5 @@
 
+{-# LANGUAGE EmptyDataDecls #-}
 
 module Carma.Dictionaries where
 
@@ -32,7 +33,7 @@ instance FromJSON (Object ObjBase) where parseJSON = mkFromJSON ObjBase
 instance SqlFields ObjBase where sqlFields = getSqlFields ObjBase
 
 data Case = Case
-  {ident    :: ObjId "ident"
+  {ident    :: Field "ident"    (Ident Case)             "ident"
   ,obj      :: Field "obj"      (Object ObjBase)         ""
   ,carMake  :: Field "carMake"  (Maybe (Ident CarMake))  "Марка автомобиля"
   ,carModel :: Field "carModel" (Maybe (Ident CarModel)) "Модель автомобиля"
@@ -42,6 +43,4 @@ data Case = Case
 
 instance FromJSON (Object Case) where parseJSON = mkFromJSON Case
 instance SqlFields Case where sqlFields = getSqlFields Case
-
-ddl = mkDDL (undefined :: Case)
 

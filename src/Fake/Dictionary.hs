@@ -4,12 +4,13 @@ module Fake.Dictionary where
 import Data.Text (Text)
 import Data.Typeable
 
-import Fake.Object
+import Fake.Object.Internals.Ident
+import Fake.Object.Internals.Field
 
 
 class Typeable d => Dictionary d where
-  dictKey :: d -> ObjId "ident"
-  dictKey _ = ObjId
+  dictKey :: d -> Field "ident" (Ident d) "ident"
+  dictKey _ = Field
   dictVal :: d -> Field "value" Text "value"
   dictVal _ = Field
 

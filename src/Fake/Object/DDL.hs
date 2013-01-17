@@ -8,7 +8,7 @@ import Data.Dynamic
 
 import Fake.Object
 
-
+-- options :: [opt ctime "DEFAULT now()"]
 mkDDL :: (Typeable cls, SqlFields cls) => cls -> String
 mkDDL (_ :: cls) = show (tableName, fields)
   where
@@ -33,6 +33,7 @@ class GetSqlFields cls f where
 instance GetSqlFields cls cls where
   getSqlFields _ = []
 
+{-
 instance (GetSqlFields cls res, Typeable cls, SingI nm)
   => GetSqlFields cls (ObjId nm -> res)
   where
@@ -42,6 +43,7 @@ instance (GetSqlFields cls res, Typeable cls, SingI nm)
         fieldName = fromSing (sing :: Sing nm)
         fieldType = typeOf   (undefined :: Ident cls)
         rest      = getSqlFields (f ObjId)
+-}
 
 instance (GetSqlFields cls res, SingI nm, SqlFields typ)
   => GetSqlFields cls (Field nm (Object typ) desc -> res)

@@ -15,13 +15,18 @@ cabal-version:       >=1.8
 
 library
   hs-source-dirs:    src
-  exposed-modules:   Fake.Object,
+  exposed-modules:
+                     Fake.Object,
                      Fake.Dictionary,
-                     Fake.Object.Internals,
                      Fake.Object.Aeson,
                      Fake.Object.DDL,
                      Carma.Dictionaries
-  -- other-modules:
+  other-modules:
+                     Fake.Object.Internals.Untyped,
+                     Fake.Object.Internals.Field,
+                     Fake.Object.Internals.Bag,
+                     Fake.Object.Internals.Object
+
   build-depends:     base,
                      containers == 0.5.0.0,
                      unordered-containers,
@@ -29,7 +34,7 @@ library
                      text
 
   extensions:
-    DataKinds, EmptyDataDecls,
+    DataKinds, KindSignatures, TypeOperators,
     TypeFamilies,
     DeriveDataTypeable, StandaloneDeriving,
     MultiParamTypeClasses, FlexibleInstances, FlexibleContexts

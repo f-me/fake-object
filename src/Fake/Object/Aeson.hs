@@ -1,6 +1,6 @@
 
-{-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE ScopedTypeVariables, OverlappingInstances #-}
+{-# LANGUAGE StandaloneDeriving, GeneralizedNewtypeDeriving #-}
 
 module Fake.Object.Aeson
   (mkFromJSON
@@ -18,7 +18,9 @@ import qualified Data.HashMap.Strict as H
 import Data.Dynamic
 import GHC.TypeLits
 
-import Fake.Object.Internals as Fake
+import Fake.Object
+import Fake.Object.Internals.Ident
+import Fake.Object.Internals.Object as Fake
 
 
 -- FIXME: maybe `Ident cls` should be represented as "clsName:1234"
@@ -45,12 +47,14 @@ instance IterateFromJSON cls cls where
     | H.null o = pure $ Fake.Object res
     | otherwise = fail $ "iterateFromJSON: unexpected fields " ++ show o
 
+{-
 instance (IterateFromJSON cls res, Typeable cls, SingI name)
   => IterateFromJSON cls (ObjId name -> res)
   where
     iterateFromJSON = iterateFromJSON'
       (undefined :: Ident cls)
       (Text.pack $ fromSing (sing :: Sing name))
+-}
 
 instance (IterateFromJSON cls res, SingI name, Typeable typ, FromJSON typ)
   => IterateFromJSON cls (Field name typ desc -> res)
