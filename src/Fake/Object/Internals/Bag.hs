@@ -14,25 +14,20 @@ import Fake.Object.Internals.Field
 import Fake.Object.Internals.Untyped
 
 
-newtype Bag (fs :: [(*,Symbol,*)]) = Bag (Map Text Dynamic)
+newtype Bag cls (fs :: [(Symbol,*)]) = Bag (Map Text Dynamic)
 
 
-instance MapWithTag (Bag fs) where
+instance MapWithTag (Bag cls fs) where
   toUntyped (Bag m) = m
   fromUntyped = Bag
 
+class Elem (x :: (Symbol,*)) (xs :: [(Symbol,*)])
+instance Elem x (x ': xs)
+instance Elem x xs => Elem x (y ': xs)
 
-instance (SingI name, Typeable typ)
-  => HasField (Bag ('(cls,name,typ) ': fs))  (cls -> Field name typ desc)
-  where
-    type FType (Bag ('(cls,name,typ) ': fs)) (cls -> Field name typ desc) = typ
-    fld = mapLens . Text.pack . fieldName
 
-instance
-  (SingI name, Typeable typ
-  ,HasField (Bag fs) (cls -> Field name typ desc)
-  )
-  => HasField (Bag ('(c,n,t) ': fs))  (cls -> Field name typ desc)
+instance (SingI name, Typeable typ, Elem '(name,typ) fs)
+  => HasField (Bag cls fs) (cls -> Field name typ desc)
   where
-    type FType (Bag ('(c,n,t) ': fs)) (cls -> Field name typ desc) = typ
+    type FType (Bag cls fs) (cls -> Field name typ desc) = typ
     fld = mapLens . Text.pack . fieldName
