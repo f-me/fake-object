@@ -27,7 +27,13 @@ instance Elem x xs => Elem x (y ': xs)
 
 
 instance (SingI name, Typeable typ, Elem '(name,typ) fs)
-  => HasField (Bag cls fs) (cls -> Field name typ desc)
+  => HasField (Bag cls fs) (cls -> Field Req name typ desc)
   where
-    type FType (Bag cls fs) (cls -> Field name typ desc) = typ
+    type FldType (Bag cls fs) (cls -> Field Req name typ desc) = typ
+    fld = mapLens . Text.pack . fieldName
+
+instance (SingI name, Typeable typ, Elem '(name,typ) fs)
+  => HasField (Bag cls fs) (cls -> Field Opt name typ desc)
+  where
+    type FldType (Bag cls fs) (cls -> Field Opt name typ desc) = Maybe typ
     fld = mapLens . Text.pack . fieldName

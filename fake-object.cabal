@@ -17,7 +17,7 @@ library
   hs-source-dirs:    src
   exposed-modules:
                      Fake.Object,
-                     Fake.Dictionary,
+                     -- Fake.Dictionary,
                      Fake.Object.Aeson,
                      Fake.Object.DDL,
                      Carma.Dictionaries

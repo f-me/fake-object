@@ -46,7 +46,7 @@ instance (GetSqlFields cls res, Typeable cls, SingI nm)
 -}
 
 instance (GetSqlFields cls res, SingI nm, SqlFields typ)
-  => GetSqlFields cls (Field nm (Object typ) desc -> res)
+  => GetSqlFields cls (Field rq nm (Object typ) desc -> res)
   where
     getSqlFields f = map castF sqlFields ++ rest
       where
@@ -60,7 +60,7 @@ instance (GetSqlFields cls res, SingI nm, SqlFields typ)
           }
 
 instance (GetSqlFields cls res, SingI nm, Typeable typ, SingI desc)
-  => GetSqlFields cls (Field nm typ desc -> res)
+  => GetSqlFields cls (Field rq nm typ desc -> res)
   where
     getSqlFields f = SqlField fieldName fieldDesc fieldType : rest
       where

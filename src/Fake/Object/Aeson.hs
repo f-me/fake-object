@@ -57,7 +57,7 @@ instance (IterateFromJSON cls res, Typeable cls, SingI name)
 -}
 
 instance (IterateFromJSON cls res, SingI name, Typeable typ, FromJSON typ)
-  => IterateFromJSON cls (Field name typ desc -> res)
+  => IterateFromJSON cls (Field rq name typ desc -> res)
   where
     iterateFromJSON = iterateFromJSON'
       (undefined :: typ)

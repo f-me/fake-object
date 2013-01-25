@@ -40,5 +40,5 @@ mapSet obj fld val
 
 mapLens
   :: (MapWithTag obj, Typeable typ)
-  => Text -> SimpleLens obj typ
+  => Text -> Lens' obj typ
 mapLens fld = lens (`mapGet` fld) (`mapSet` fld)

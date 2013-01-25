@@ -30,7 +30,13 @@ instance MapWithTag (Object cls) where
 
 
 instance (SingI name, Typeable typ)
-  => HasField (Object cls) (cls -> Field name typ desc)
+  => HasField (Object cls) (cls -> Field Req name typ desc)
   where
-    type FType (Object cls) (cls -> Field name typ desc) = typ
+    type FldType (Object cls) (cls -> Field Req name typ desc) = typ
+    fld = mapLens . Text.pack . fieldName
+
+instance (SingI name, Typeable typ)
+  => HasField (Object cls) (cls -> Field Opt name typ desc)
+  where
+    type FldType (Object cls) (cls -> Field Opt name typ desc) = Maybe typ
     fld = mapLens . Text.pack . fieldName
